@@ -65,6 +65,13 @@ final public class PopupDialogContainerView: UIView {
         set { shadowContainer.layer.shadowColor = newValue?.cgColor }
     }
 
+    public dynamic var marginInsets: PopupMargins = PopupMargins(right: 10, left: 10) {
+        didSet {
+            removeConstraints(constraints)
+            setupConstraints()
+        }
+    }
+
     // MARK: - Views
 
     /// The shadow container is the basic view of the PopupDialog
@@ -136,6 +143,7 @@ final public class PopupDialogContainerView: UIView {
     internal override init(frame: CGRect) {
         super.init(frame: frame)
         setupViews()
+        setupConstraints()
     }
 
     required public init?(coder aDecoder: NSCoder) {
@@ -143,23 +151,29 @@ final public class PopupDialogContainerView: UIView {
     }
 
     // MARK: - View setup
-
     internal func setupViews() {
-
         // Add views
         addSubview(shadowContainer)
         shadowContainer.addSubview(container)
         container.addSubview(stackView)
+    }
 
+    func setupConstraints() {
         // Layout views
         let views = ["shadowContainer": shadowContainer, "container": container, "stackView": stackView]
         var constraints = [NSLayoutConstraint]()
 
         // Shadow container constraints
-        constraints += NSLayoutConstraint.constraints(withVisualFormat: "H:|-(>=10,==20@900)-[shadowContainer(<=340,>=300)]-(>=10,==20@900)-|", options: [], metrics: nil, views: views)
+        constraints += NSLayoutConstraint.constraints(withVisualFormat: "H:|-(==" + "\(marginInsets.left)" + ")-[shadowContainer]-(==" + "\(marginInsets.right)" + ")-|", options: [], metrics: nil, views: views)
+
+        if let top = marginInsets.top,
+            let bottom = marginInsets.bottom {
+            constraints += NSLayoutConstraint.constraints(withVisualFormat: "V:|-" + "\(top)" + "-[shadowContainer]-" + "\(bottom)" + "-|", options: [], metrics: nil, views: views)
+        } else {
+            centerYConstraint = NSLayoutConstraint(item: shadowContainer, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1, constant: 0)
+            constraints.append(centerYConstraint!)
+        }
         constraints += [NSLayoutConstraint(item: shadowContainer, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1, constant: 0)]
-        centerYConstraint = NSLayoutConstraint(item: shadowContainer, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1, constant: 0)
-        constraints.append(centerYConstraint!)
 
         // Container constraints
         constraints += NSLayoutConstraint.constraints(withVisualFormat: "H:|[container]|", options: [], metrics: nil, views: views)
@@ -168,7 +182,7 @@ final public class PopupDialogContainerView: UIView {
         // Main stack view constraints
         constraints += NSLayoutConstraint.constraints(withVisualFormat: "H:|[stackView]|", options: [], metrics: nil, views: views)
         constraints += NSLayoutConstraint.constraints(withVisualFormat: "V:|[stackView]|", options: [], metrics: nil, views: views)
-
+        
         // Activate constraints
         NSLayoutConstraint.activate(constraints)
     }

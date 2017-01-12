@@ -37,6 +37,7 @@
 		D647B1AACCC618D4B8E23118DB85D2E3 /* UIView+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = F95092259F4C2AA92A04C7B741830CB3 /* UIView+Animations.swift */; };
 		D66396466D312FA39A3A4B9B7859CC8C /* TZSpacerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F19BE0B1A86243FFC14EAEDF515A310 /* TZSpacerView.swift */; };
 		E0536BE89718D5C04C98A9B14199DA49 /* Pods-PopupDialog_Tests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = CF4EB5D76E192D43AEFC022F76CCE8F7 /* Pods-PopupDialog_Tests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		EF86D5841E27E8F500C666EC /* PopupMargins.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF86D5821E27E8BF00C666EC /* PopupMargins.swift */; };
 		FC4D952B98763E67730978ED37E55549 /* PopupDialog-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 02CDC0E69AF5626FF9A193F78578BEDF /* PopupDialog-dummy.m */; };
 /* End PBXBuildFile section */
 
@@ -156,6 +157,7 @@
 				F95092259F4C2AA92A04C7B741830CB3 /* UIView+Animations.swift */,
 				64EB596F9136F4FC670E0A9F6849CB37 /* UIViewController+Visibility.swift */,
 				7BE9978894D6F9D996A5E5012AF54AC5 /* TZStackView */,
+				EF86D5821E27E8BF00C666EC /* PopupMargins.swift */,
 			);
 			name = Classes;
 			path = Classes;
@@ -429,6 +431,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8442DBD24281F416B879D4EE919E7B44 /* FXBlurView.m in Sources */,
+				EF86D5841E27E8F500C666EC /* PopupMargins.swift in Sources */,
 				1F8AC9A04A214AF5AE8BC7A45FECF8BA /* InteractiveTransition.swift in Sources */,
 				5AE911C903EE360F83144C93ACADAB57 /* PopupDialog+Keyboard.swift in Sources */,
 				FC4D952B98763E67730978ED37E55549 /* PopupDialog-dummy.m in Sources */,
