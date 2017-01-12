@@ -72,6 +72,7 @@ class AppearanceTests: XCTestCase {
         pcv.cornerRadius        = 10
         pcv.shadowEnabled       = false
         pcv.shadowColor         = UIColor.green
+        pcv.marginInsets        = PopupMargins(top: 40, left: 50, bottom: 55, right: 60)
 
         // Customize overlay appearance
         let ov = PopupDialogOverlayView.appearance()
@@ -101,6 +102,10 @@ class AppearanceTests: XCTestCase {
         XCTAssertEqual(pcv.cornerRadius, 10)
         XCTAssertFalse(pcv.shadowEnabled)
         XCTAssertEqual(pcv.shadowColor, UIColor.green)
+        XCTAssertEqual(pcv.marginInsets.top, 40)
+        XCTAssertEqual(pcv.marginInsets.left, 50)
+        XCTAssertEqual(pcv.marginInsets.bottom, 55)
+        XCTAssertEqual(pcv.marginInsets.right, 60)
 
         // Overlay customized appearance
         XCTAssertEqual(ov.color, UIColor.yellow)
