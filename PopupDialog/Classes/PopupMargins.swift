@@ -13,8 +13,12 @@ final public class PopupMargins: NSObject {
         self.right = right
     }
 
-    public init(right: CGFloat, left: CGFloat) {
+    public init(left: CGFloat, right: CGFloat) {
         self.left = left
         self.right = right
     }
+}
+
+func == (lhs: PopupMargins, rhs: PopupMargins) -> Bool {
+    return lhs.bottom == rhs.bottom && lhs.top == rhs.top && lhs.left == rhs.left && lhs.right == rhs.right
 }

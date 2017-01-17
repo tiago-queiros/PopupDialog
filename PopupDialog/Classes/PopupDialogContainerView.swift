@@ -65,8 +65,9 @@ final public class PopupDialogContainerView: UIView {
         set { shadowContainer.layer.shadowColor = newValue?.cgColor }
     }
 
-    public dynamic var marginInsets: PopupMargins = PopupMargins(right: 10, left: 10) {
+    public dynamic var marginInsets: PopupMargins = PopupMargins(left: 10, right: 10) {
         didSet {
+            if marginInsets == marginInsets { return }
             removeConstraints(constraints)
             setupConstraints()
         }
