@@ -67,7 +67,7 @@ final public class PopupDialogContainerView: UIView {
 
     public dynamic var marginInsets: PopupMargins = PopupMargins(left: 10, right: 10) {
         didSet {
-            if marginInsets == marginInsets { return }
+            if oldValue == marginInsets { return }
             removeConstraints(constraints)
             setupConstraints()
         }
