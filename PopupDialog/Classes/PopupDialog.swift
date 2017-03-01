@@ -126,6 +126,7 @@ final public class PopupDialog: UIViewController {
 
         // Assign the interactor view controller
         interactor.viewController = self
+        interactor.completion = self.completion
 
         // Define presentation styles
         transitioningDelegate = presentationManager
@@ -188,11 +189,6 @@ final public class PopupDialog: UIViewController {
         removeObservers()
     }
 
-    deinit {
-        completion?()
-        completion = nil
-    }
-
     // MARK - Dismissal related
 
     @objc fileprivate func handleTap(_ sender: UITapGestureRecognizer) {
@@ -208,6 +204,7 @@ final public class PopupDialog: UIViewController {
      */
     public func dismiss(_ completion: (() -> Void)? = nil) {
         self.dismiss(animated: true) {
+             self.completion?()
             completion?()
         }
     }
