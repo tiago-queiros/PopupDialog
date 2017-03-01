@@ -81,13 +81,14 @@ final public class PopupDialog: UIViewController {
      - returns: Popup dialog default style
      */
     public convenience init(
-                title: String?,
-                message: String?,
-                image: UIImage? = nil,
-                buttonAlignment: UILayoutConstraintAxis = .vertical,
-                transitionStyle: PopupDialogTransitionStyle = .bounceUp,
-                gestureDismissal: Bool = true,
-                completion: (() -> Void)? = nil) {
+        title: String?,
+        message: String?,
+        image: UIImage? = nil,
+        buttonAlignment: UILayoutConstraintAxis = .vertical,
+        transitionStyle: PopupDialogTransitionStyle = .bounceUp,
+        gestureDismissal: Bool = true,
+        tapDismissal: Bool = true,
+        completion: (() -> Void)? = nil) {
 
         // Create and configure the standard popup dialog view
         let viewController = PopupDialogDefaultViewController()
@@ -115,6 +116,7 @@ final public class PopupDialog: UIViewController {
         buttonAlignment: UILayoutConstraintAxis = .vertical,
         transitionStyle: PopupDialogTransitionStyle = .bounceUp,
         gestureDismissal: Bool = true,
+        tapDismissal: Bool = true,
         completion: (() -> Void)? = nil) {
 
         self.viewController = viewController
@@ -154,12 +156,16 @@ final public class PopupDialog: UIViewController {
             }
         }
 
+        if tapDismissal {
+            let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap))
+            popupContainerView.gesturesContainerView.isUserInteractionEnabled = true
+            popupContainerView.gesturesContainerView.addGestureRecognizer(tapRecognizer)
+        }
+
         // Allow for dialog dismissal on background tap and dialog pan gesture
         if gestureDismissal {
             let panRecognizer = UIPanGestureRecognizer(target: interactor, action: #selector(InteractiveTransition.handlePan))
             popupContainerView.stackView.addGestureRecognizer(panRecognizer)
-            let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap))
-            popupContainerView.addGestureRecognizer(tapRecognizer)
         }
     }
 
@@ -192,7 +198,6 @@ final public class PopupDialog: UIViewController {
     // MARK - Dismissal related
 
     @objc fileprivate func handleTap(_ sender: UITapGestureRecognizer) {
-
         // Make sure it's not a tap on the dialog but the background
         let point = sender.location(in: popupContainerView.stackView)
         guard !popupContainerView.stackView.point(inside: point, with: nil) else { return }
@@ -204,7 +209,7 @@ final public class PopupDialog: UIViewController {
      */
     public func dismiss(_ completion: (() -> Void)? = nil) {
         self.dismiss(animated: true) {
-             self.completion?()
+            self.completion?()
             completion?()
         }
     }
@@ -223,7 +228,7 @@ final public class PopupDialog: UIViewController {
             if buttons.isEmpty {
                 stackView.removeArrangedSubview(popupContainerView.buttonStackView)
             }
-            
+
             for (index, button) in buttons.enumerated() {
                 button.needsLeftSeparator = buttonStackView.axis == .horizontal && index > 0
                 buttonStackView.addArrangedSubview(button)
@@ -235,7 +240,7 @@ final public class PopupDialog: UIViewController {
             if buttons.isEmpty {
                 stackView.removeArrangedSubview(popupContainerView.buttonStackView)
             }
-            
+
             for (index, button) in buttons.enumerated() {
                 button.needsLeftSeparator = buttonStackView.axis == .horizontal && index > 0
                 buttonStackView.addArrangedSubview(button)
@@ -299,7 +304,7 @@ extension PopupDialog {
             if #available(iOS 9.0, *) {
                 let buttonStackView = popupContainerView.buttonStackView as! UIStackView
                 buttonStackView.axis = newValue
-                
+
             } else {
                 let buttonStackView = popupContainerView.buttonStackView as! TZStackView
                 buttonStackView.axis = newValue

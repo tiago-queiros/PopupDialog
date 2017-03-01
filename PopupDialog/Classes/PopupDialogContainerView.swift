@@ -40,29 +40,29 @@ final public class PopupDialogContainerView: UIView {
 
     /// The corner radius of the popup view
     public dynamic var cornerRadius: Float {
-        get { return Float(shadowContainer.layer.cornerRadius) }
+        get { return Float(gesturesContainerView.layer.cornerRadius) }
         set {
             let radius = CGFloat(newValue)
-            shadowContainer.layer.cornerRadius = radius
+            gesturesContainerView.layer.cornerRadius = radius
             container.layer.cornerRadius = radius
         }
     }
 
     /// Enable / disable shadow rendering
     public dynamic var shadowEnabled: Bool {
-        get { return shadowContainer.layer.shadowRadius > 0 }
-        set { shadowContainer.layer.shadowRadius = newValue ? 5 : 0 }
+        get { return gesturesContainerView.layer.shadowRadius > 0 }
+        set { gesturesContainerView.layer.shadowRadius = newValue ? 5 : 0 }
     }
 
     /// The shadow color
     public dynamic var shadowColor: UIColor? {
         get {
-            guard let color = shadowContainer.layer.shadowColor else {
+            guard let color = gesturesContainerView.layer.shadowColor else {
                 return nil
             }
             return UIColor(cgColor: color)
         }
-        set { shadowContainer.layer.shadowColor = newValue?.cgColor }
+        set { gesturesContainerView.layer.shadowColor = newValue?.cgColor }
     }
 
     public dynamic var marginInsets: PopupMargins = PopupMargins(left: 10, right: 10) {
@@ -77,7 +77,7 @@ final public class PopupDialogContainerView: UIView {
 
     /// The shadow container is the basic view of the PopupDialog
     /// As it does not clip subviews, a shadow can be applied to it
-    internal lazy var shadowContainer: UIView = {
+    internal lazy var gesturesContainerView: UIView = {
         let shadowContainer = UIView(frame: .zero)
         shadowContainer.translatesAutoresizingMaskIntoConstraints = false
         shadowContainer.backgroundColor = UIColor.clear
@@ -154,35 +154,34 @@ final public class PopupDialogContainerView: UIView {
     // MARK: - View setup
     internal func setupViews() {
         // Add views
-        addSubview(shadowContainer)
-        shadowContainer.addSubview(container)
+        addSubview(gesturesContainerView)
+        addSubview(container)
         container.addSubview(stackView)
     }
 
     func setupConstraints() {
         // Layout views
-        let views = ["shadowContainer": shadowContainer, "container": container, "stackView": stackView]
+        let views = ["shadowContainer": gesturesContainerView, "container": container, "stackView": stackView]
         var constraints = [NSLayoutConstraint]()
 
-        // Shadow container constraints
-        constraints += NSLayoutConstraint.constraints(withVisualFormat: "H:|-(==" + "\(marginInsets.left)" + ")-[shadowContainer]-(==" + "\(marginInsets.right)" + ")-|", options: [], metrics: nil, views: views)
+        // Container constraints
+        constraints += NSLayoutConstraint.constraints(withVisualFormat: "H:|-(==" + "\(marginInsets.left)" + ")-[container]-(==" + "\(marginInsets.right)" + ")-|", options: [], metrics: nil, views: views)
 
         if let top = marginInsets.top,
             let bottom = marginInsets.bottom {
-            constraints += NSLayoutConstraint.constraints(withVisualFormat: "V:|-" + "\(top)" + "-[shadowContainer]-" + "\(bottom)" + "-|", options: [], metrics: nil, views: views)
+            constraints += NSLayoutConstraint.constraints(withVisualFormat: "V:|-" + "\(top)" + "-[container]-" + "\(bottom)" + "-|", options: [], metrics: nil, views: views)
         } else {
-            centerYConstraint = NSLayoutConstraint(item: shadowContainer, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1, constant: 0)
+            centerYConstraint = NSLayoutConstraint(item: container, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1, constant: 0)
             constraints.append(centerYConstraint!)
         }
-        constraints += [NSLayoutConstraint(item: shadowContainer, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1, constant: 0)]
-
-        // Container constraints
-        constraints += NSLayoutConstraint.constraints(withVisualFormat: "H:|[container]|", options: [], metrics: nil, views: views)
-        constraints += NSLayoutConstraint.constraints(withVisualFormat: "V:|[container]|", options: [], metrics: nil, views: views)
 
         // Main stack view constraints
         constraints += NSLayoutConstraint.constraints(withVisualFormat: "H:|[stackView]|", options: [], metrics: nil, views: views)
         constraints += NSLayoutConstraint.constraints(withVisualFormat: "V:|[stackView]|", options: [], metrics: nil, views: views)
+
+        //gesturesContainerView
+        constraints += NSLayoutConstraint.constraints(withVisualFormat: "H:|-0-[shadowContainer]-0-|", options: .directionLeadingToTrailing, metrics: nil, views: views)
+        constraints += NSLayoutConstraint.constraints(withVisualFormat: "V:|-0-[shadowContainer]-0-|", options: .directionLeadingToTrailing, metrics: nil, views: views)
         
         // Activate constraints
         NSLayoutConstraint.activate(constraints)
