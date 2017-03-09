@@ -65,6 +65,8 @@ final public class PopupDialog: UIViewController {
     /// Whether or not to shift view for keyboard display
     public var keyboardShiftsView = true
 
+    public var orientations: UIInterfaceOrientationMask = .all
+
     // MARK: - Initializers
 
     /*!
@@ -282,6 +284,10 @@ final public class PopupDialog: UIViewController {
     public func tapButtonWithIndex(_ index: Int) {
         let button = buttons[index]
         button.buttonAction?()
+    }
+
+    public override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return orientations
     }
 }
 
